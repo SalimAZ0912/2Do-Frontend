@@ -1,6 +1,5 @@
 import "./sidebar.css";
 import Button from "../button/button";
-import Icon from "../icon/icon";
 
 function Sidebar() {
   return (
@@ -13,20 +12,12 @@ function Sidebar() {
 
           <Button label="Report" icon="report.svg" />
 
-          <a className="profile-link" href="/notes/profile">
-            <Icon logo="account.svg" alt="Report" />
-            Profil
-          </a>
-          <a className="calendar-link" href="/notes/calendar">
-            <Icon logo="calendar.svg" alt="Calendar" />
-            Calendar
-          </a>
+          <Button label="Profil" icon="report.svg" />
+
+          <Button label="Calendar" icon="calendar.svg" />
 
           <form className="logout-form" method="post">
-            <button className="logout-button" type="submit">
-              <Icon logo="logout.svg" alt="Notes" />
-              Logout
-            </button>
+            <Button label="Log out" icon="logout.svg" />
           </form>
         </div>
       </div>
