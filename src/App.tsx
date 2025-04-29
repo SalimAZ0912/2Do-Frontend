@@ -22,13 +22,7 @@ function App() {
           setSelectedNoteId(id);
         }}
       />
-      <Content
-        selected={selected}
-        selectedNoteId={selectedNoteId}
-        setSelectedNoteId={function (id: number | null): void {
-          throw new Error("Function not implemented.");
-        }}
-      />
+      <Content selected={selected} selectedNoteId={selectedNoteId} />
     </div>
   );
 }

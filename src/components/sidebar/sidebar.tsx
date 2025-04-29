@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./sidebar.css";
 import Button from "../button/button";
 
@@ -8,8 +9,14 @@ interface SidebarProps {
 }
 
 function Sidebar({ onSelect, onNoteSelect, active }: SidebarProps) {
+  const [notesExpanded, setNotesExpanded] = useState(true); // Zustand für ausklappen
   const isActive = (key: string) => (active === key ? "active" : "");
   const notes: string[] = JSON.parse(localStorage.getItem("notes") || "[]");
+
+  const toggleNotes = () => {
+    onSelect("notes"); // Ansicht auf Notes setzen
+    setNotesExpanded((prev) => !prev);
+  };
 
   return (
     <div className="sidebar-container">
@@ -19,10 +26,13 @@ function Sidebar({ onSelect, onNoteSelect, active }: SidebarProps) {
         <Button
           label="Meine Notizen"
           icon="notes.svg"
-          onClick={() => onSelect("notes")}
+          onClick={toggleNotes}
           customClass={isActive("notes")}
+          rightIcon={notesExpanded ? "▲" : "▼"} // Pfeil abhängig vom Zustand
         />
+
         {active === "notes" &&
+          notesExpanded &&
           notes.map((note, index) => (
             <div
               key={index}
@@ -60,7 +70,14 @@ function Sidebar({ onSelect, onNoteSelect, active }: SidebarProps) {
         />
 
         <form className="logout-form" method="post">
-          <Button label="Log out" customClass="logout" icon="logout.svg" />
+          <Button
+            label="Log out"
+            customClass="logout"
+            icon="logout.svg"
+            onClick={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
         </form>
       </div>
     </div>
