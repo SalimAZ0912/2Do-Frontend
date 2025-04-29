@@ -22,3 +22,7 @@ button:hover {
   justify-content: center;
   align-items: center;
 }
+
+.img {
+  margin-right: 5px;
+}
