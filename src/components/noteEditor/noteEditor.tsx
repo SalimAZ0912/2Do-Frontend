@@ -6,19 +6,37 @@ interface NoteEditorProps {
   onBack: () => void;
 }
 
+const commands = [
+  { label: "Fett", action: () => document.execCommand("bold") },
+  { label: "Kursiv", action: () => document.execCommand("italic") },
+  { label: "Unterstrichen", action: () => document.execCommand("underline") },
+  {
+    label: "Durchgestrichen",
+    action: () => document.execCommand("strikeThrough"),
+  },
+  {
+    label: "Textfarbe: Rot",
+    action: () => document.execCommand("foreColor", false, "#e74c3c"),
+  },
+  {
+    label: "Hintergrund: Gelb",
+    action: () => document.execCommand("hiliteColor", false, "#fef65b"),
+  },
+  { label: "Linksbündig", action: () => document.execCommand("justifyLeft") },
+  { label: "Zentriert", action: () => document.execCommand("justifyCenter") },
+  { label: "Rechtsbündig", action: () => document.execCommand("justifyRight") },
+];
+
 function NoteEditor({ noteIndex, onBack }: NoteEditorProps) {
   const [text, setText] = useState("");
-  const notes = JSON.parse(localStorage.getItem("notes") || "[]");
+  const [showCommands, setShowCommands] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
+  const [filteredCommands, setFilteredCommands] = useState(commands);
+  const [commandQuery, setCommandQuery] = useState("");
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const noteRef = useRef<HTMLDivElement>(null);
 
-  // Formatierungszustände
-  const [fontSize, setFontSize] = useState("16px");
-  const [fontColor, setFontColor] = useState("#000000");
-  const [bgColor, setBgColor] = useState("#ffffff");
-  const [fontFamily, setFontFamily] = useState("Arial");
-  const [isBold, setIsBold] = useState(false);
-  const [isItalic, setIsItalic] = useState(false);
-  const [isUnderline, setIsUnderline] = useState(false);
+  const notes = JSON.parse(localStorage.getItem("notes") || "[]");
 
   useEffect(() => {
     if (noteIndex !== null && notes[noteIndex]) {
@@ -29,133 +47,174 @@ function NoteEditor({ noteIndex, onBack }: NoteEditorProps) {
   }, [noteIndex]);
 
   const saveNote = () => {
+    const html = noteRef.current?.innerHTML || "";
     const updated = [...notes];
     if (noteIndex !== null) {
-      updated[noteIndex] = text;
+      updated[noteIndex] = html;
     } else {
-      updated.push(text);
+      updated.push(html);
     }
     localStorage.setItem("notes", JSON.stringify(updated));
     alert("Notiz gespeichert!");
     onBack();
   };
 
-  // Textänderung erkennen
-  const handleTextChange = () => {
-    if (noteRef.current) {
-      setText(noteRef.current.innerHTML); // Speichern des Textes bei Änderungen
+  const handleInput = () => {
+    const content = noteRef.current?.innerHTML || "";
+    setText(content);
+
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+    const range = sel.getRangeAt(0);
+    const precedingRange = range.cloneRange();
+    precedingRange.setStart(noteRef.current!, 0);
+    const precedingText = precedingRange.toString();
+    const lastWordMatch = precedingText.match(/\/([^\s]*)$/); // Wort nach Slash
+
+    if (lastWordMatch) {
+      const query = lastWordMatch[1];
+      setCommandQuery(query);
+      filterCommands(query);
+      setShowCommands(true);
+      setSelectedIndex(0);
+
+      const rect = range.getBoundingClientRect();
+      if (rect) {
+        setMenuPosition({
+          top: rect.bottom + window.scrollY,
+          left: rect.left + window.scrollX,
+        });
+      }
+    } else {
+      setShowCommands(false);
     }
   };
 
-  // Formatierungen anwenden
-  const applyStyles = () => {
-    if (noteRef.current) {
-      noteRef.current.style.fontSize = fontSize;
-      noteRef.current.style.color = fontColor;
-      noteRef.current.style.backgroundColor = bgColor;
-      noteRef.current.style.fontFamily = fontFamily;
-      noteRef.current.style.fontWeight = isBold ? "bold" : "normal";
-      noteRef.current.style.fontStyle = isItalic ? "italic" : "normal";
-      noteRef.current.style.textDecoration = isUnderline ? "underline" : "none";
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (showCommands) {
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        setSelectedIndex((prev) => (prev + 1) % filteredCommands.length);
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        setSelectedIndex(
+          (prev) =>
+            (prev - 1 + filteredCommands.length) % filteredCommands.length
+        );
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        handleCommandClick(filteredCommands[selectedIndex].action);
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        setShowCommands(false);
+      } else if (e.key === "Backspace") {
+        const newQuery = commandQuery.slice(0, -1);
+        setCommandQuery(newQuery);
+        filterCommands(newQuery);
+        if (newQuery === "") setShowCommands(false);
+      } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
+        const newQuery = commandQuery + e.key;
+        setCommandQuery(newQuery);
+        filterCommands(newQuery);
+        if (
+          !commands.some((cmd) =>
+            cmd.label.toLowerCase().includes(newQuery.toLowerCase())
+          )
+        ) {
+          setShowCommands(false);
+        }
+      } else {
+        setShowCommands(false);
+      }
     }
   };
 
-  useEffect(() => {
-    applyStyles(); // Styles anwenden, wenn sich etwas ändert
-  }, [fontSize, fontColor, bgColor, fontFamily, isBold, isItalic, isUnderline]);
+  const filterCommands = (query: string) => {
+    const filtered = commands.filter((cmd) =>
+      cmd.label.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilteredCommands(filtered);
+    setSelectedIndex(0);
+  };
 
-  // Dropdown-Handler
-  const handleFontSizeChange = (size: string) => setFontSize(size);
-  const handleFontColorChange = (color: string) => setFontColor(color);
-  const handleBgColorChange = (color: string) => setBgColor(color);
-  const handleFontFamilyChange = (font: string) => setFontFamily(font);
+  const handleCommandClick = (cmd: () => void) => {
+    setShowCommands(false);
+    restoreFocus(() => {
+      removeLastSlash();
+      cmd();
+    });
+  };
 
-  const toggleBold = () => setIsBold(!isBold);
-  const toggleItalic = () => setIsItalic(!isItalic);
-  const toggleUnderline = () => setIsUnderline(!isUnderline);
+  const removeLastSlash = () => {
+    const sel = window.getSelection();
+    if (!sel || !sel.rangeCount) return;
+
+    const range = sel.getRangeAt(0);
+    const precedingRange = range.cloneRange();
+    precedingRange.setStart(noteRef.current!, 0);
+    const precedingText = precedingRange.toString();
+    const match = precedingText.match(/\/[^\s]*$/);
+    if (!match) return;
+
+    // Entferne den Slash-Befehl rückwirkend
+    const startOffset = precedingText.length - match[0].length;
+    const newRange = document.createRange();
+    const node = noteRef.current!;
+    const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+    let charCount = 0;
+    let startNode: Text | null = null;
+    let startOffsetInNode = 0;
+
+    while (walker.nextNode()) {
+      const textNode = walker.currentNode as Text;
+      const len = textNode.length;
+      if (charCount + len >= startOffset) {
+        startNode = textNode;
+        startOffsetInNode = startOffset - charCount;
+        break;
+      }
+      charCount += len;
+    }
+
+    if (startNode) {
+      startNode.deleteData(startOffsetInNode, match[0].length);
+    }
+  };
+
+  const restoreFocus = (callback: () => void) => {
+    noteRef.current?.focus();
+    setTimeout(callback, 0);
+  };
 
   return (
     <div className="note-container">
-      {/* Formatierungs-Toolbar */}
-      <div className="format-toolbar">
-        {/* Schriftgröße Dropdown */}
-        <div className="dropdown">
-          <button className="dropdown-btn">Schriftgröße</button>
-          <div className="dropdown-content">
-            <button onClick={() => handleFontSizeChange("14px")}>14px</button>
-            <button onClick={() => handleFontSizeChange("16px")}>16px</button>
-            <button onClick={() => handleFontSizeChange("18px")}>18px</button>
-            <button onClick={() => handleFontSizeChange("20px")}>20px</button>
-          </div>
-        </div>
-
-        {/* Schriftfarbe Dropdown */}
-        <div className="dropdown">
-          <button className="dropdown-btn">Schriftfarbe</button>
-          <div className="dropdown-content">
-            <button onClick={() => handleFontColorChange("#FF5733")}>
-              Rot
-            </button>
-            <button onClick={() => handleFontColorChange("#008080")}>
-              Türkis
-            </button>
-            <button onClick={() => handleFontColorChange("#000000")}>
-              Schwarz
-            </button>
-            <button onClick={() => handleFontColorChange("#3B3B3B")}>
-              Grau
-            </button>
-          </div>
-        </div>
-
-        {/* Hintergrundfarbe Dropdown */}
-        <div className="dropdown">
-          <button className="dropdown-btn">Hintergrundfarbe</button>
-          <div className="dropdown-content">
-            <button onClick={() => handleBgColorChange("#f0f0f0")}>
-              Hellgrau
-            </button>
-            <button onClick={() => handleBgColorChange("#fffcf1")}>
-              Beige
-            </button>
-            <button onClick={() => handleBgColorChange("#ffffff")}>Weiß</button>
-          </div>
-        </div>
-
-        {/* Schriftart Dropdown */}
-        <div className="dropdown">
-          <button className="dropdown-btn">Schriftart</button>
-          <div className="dropdown-content">
-            <button onClick={() => handleFontFamilyChange("Arial")}>
-              Arial
-            </button>
-            <button onClick={() => handleFontFamilyChange("Courier New")}>
-              Courier New
-            </button>
-            <button onClick={() => handleFontFamilyChange("Georgia")}>
-              Georgia
-            </button>
-            <button onClick={() => handleFontFamilyChange("Times New Roman")}>
-              Times New Roman
-            </button>
-          </div>
-        </div>
-
-        {/* Textstil Buttons */}
-        <button onClick={toggleBold}>B</button>
-        <button onClick={toggleItalic}>I</button>
-        <button onClick={toggleUnderline}>U</button>
-      </div>
-
-      {/* Editable Content Area */}
       <div
         ref={noteRef}
         className="note-text"
         contentEditable
-        placeholder="Schreibe deine Notiz hier..."
-        onInput={handleTextChange}
-        dangerouslySetInnerHTML={{ __html: text }} // Hier speichern wir den Text
-      ></div>
+        tabIndex={0}
+        suppressContentEditableWarning
+        onInput={handleInput}
+        onKeyDown={handleKeyDown}
+        style={{ textAlign: "left" }}
+      />
+
+      {showCommands && (
+        <ul
+          className="slash-menu"
+          style={{ top: menuPosition.top, left: menuPosition.left }}
+        >
+          {filteredCommands.map((cmd, i) => (
+            <li
+              key={i}
+              onMouseDown={() => handleCommandClick(cmd.action)}
+              className={i === selectedIndex ? "selected" : ""}
+            >
+              {cmd.label}
+            </li>
+          ))}
+        </ul>
+      )}
 
       <button className="save-button" onClick={saveNote}>
         Speichern

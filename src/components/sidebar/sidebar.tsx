@@ -27,7 +27,7 @@ function Sidebar({ onSelect, onNoteSelect, active }: SidebarProps) {
           label="Meine Notizen"
           icon="notes.svg"
           onClick={toggleNotes}
-          customClass={isActive("notes")}
+          customClass={isActive("sidebar-button")}
           rightIcon={notesExpanded ? "▲" : "▼"} // Pfeil abhängig vom Zustand
         />
 
@@ -54,19 +54,19 @@ function Sidebar({ onSelect, onNoteSelect, active }: SidebarProps) {
           label="Report"
           icon="report.svg"
           onClick={() => onSelect("report")}
-          customClass={isActive("report")}
+          customClass="sidebar-button"
         />
         <Button
           label="Profil"
           icon="report.svg"
           onClick={() => onSelect("profile")}
-          customClass={isActive("profile")}
+          customClass="sidebar-button"
         />
         <Button
           label="Calendar"
           icon="calendar.svg"
           onClick={() => onSelect("calendar")}
-          customClass={isActive("calendar")}
+          customClass="sidebar-button"
         />
 
         <form className="logout-form" method="post">

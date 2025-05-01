@@ -43,7 +43,6 @@ svg {
   background-color: red;
 }
 
-/* Responsive Design */
 @media (max-width: 600px) {
   .dashboard-container {
     width: 90%;
@@ -59,6 +58,15 @@ svg {
 .logout {
   background-color: rgb(207, 0, 0);
   color: white;
-  margin-top: auto; /* >>> Das schiebt den Button ganz nach unten */
-  display: block;
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-button {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

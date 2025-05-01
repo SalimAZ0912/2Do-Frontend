@@ -3,7 +3,8 @@ import Icon from "../icon/icon";
 
 interface ButtonProps {
   label: string;
-  onClick: () => void;
+  onClick?: () => void;
+  onMouseDown?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   icon?: string;
   tag?: string;
   customClass?: string;
@@ -13,6 +14,7 @@ interface ButtonProps {
 function Button({
   label,
   onClick,
+  onMouseDown,
   icon,
   tag,
   customClass,
@@ -20,7 +22,11 @@ function Button({
 }: ButtonProps) {
   return (
     <div className="button-container">
-      <button className={customClass} onClick={onClick}>
+      <button
+        className={customClass}
+        onClick={onClick}
+        onMouseDown={onMouseDown}
+      >
         {icon && <Icon logo={icon} alt={tag || "alt tag"} />}
         {label}
         {rightIcon && <span style={{ marginLeft: "auto" }}>{rightIcon}</span>}

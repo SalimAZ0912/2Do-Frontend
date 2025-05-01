@@ -1,3 +1,29 @@
+.format-toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.format-toolbar button {
+  background: rgba(0, 0, 0, 0.1);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  color: #000;
+}
+
+.format-toolbar button:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.active {
+  background-color: rgba(37, 37, 37, 0.2);
+  font-weight: bold;
+}
+
 .note-container {
   background: rgba(255, 255, 255, 0.3);
   border-radius: 16px;
@@ -10,32 +36,95 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  max-width: 100vw; /* Setzt die max. Breite des Containers auf 100% des übergeordneten Elements */
+  width: 100%; /* Setzt die Breite des Containers auf 100% */
+  overflow: hidden; /* Verhindert das Wachsen des Containers über die festgelegte Breite hinaus */
 }
 
-.format-toolbar {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 10px;
+.note-text {
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  color: #000;
+  outline: none;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.05);
+  transition: background 0.3s;
+  min-height: 590px;
+  word-wrap: break-word; /* Zeilenumbruch für lange Wörter */
+  overflow-wrap: break-word; /* Zeilenumbruch für lange Wörter */
+  white-space: normal; /* Text wird normal umgebrochen */
+  max-width: 100vw; /* Damit der Text auch umbricht, wenn er das Ende des Containers erreicht */
+  overflow: hidden; /* Verhindert, dass der Text den Container überfließt */
 }
 
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-btn {
+/* Select Styles */
+.select-style {
   padding: 8px 12px;
   border-radius: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #000;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-size: 14px;
   cursor: pointer;
-  background-color: #eee;
   transition: background 0.3s;
+  appearance: none;
 }
 
-.dropdown-btn:hover {
-  background-color: #ddd;
+.select-style:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
-.dropdown-content {
-  display: none;
+.select-style:focus {
+  outline: none;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+/* Save Button */
+.save-button {
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #000;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.save-button:hover {
+  transform: scale(1.03);
+  background: rgba(0, 200, 100, 0.3);
+}
+.slash-menu {
   position: absolute;
-  background
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  list-style: none;
+  padding: 10px;
+  margin: 0;
+  z-index: 1000;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+}
+
+.slash-menu li {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  color: #000;
+  transition: background 0.2s;
+}
+
+.slash-menu li:hover,
+.slash-menu li.active {
+  background: rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+}
