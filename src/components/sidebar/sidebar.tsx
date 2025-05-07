@@ -8,10 +8,9 @@ interface SidebarProps {
   active: string;
 }
 
-function Sidebar({ onSelect, onNoteSelect, active }: SidebarProps) {
+function Sidebar({ onSelect, active }: SidebarProps) {
   const [notesExpanded, setNotesExpanded] = useState(true); // Zustand für ausklappen
   const isActive = (key: string) => (active === key ? "active" : "");
-  const notes: string[] = JSON.parse(localStorage.getItem("notes") || "[]");
 
   const toggleNotes = () => {
     onSelect("notes"); // Ansicht auf Notes setzen
@@ -30,25 +29,6 @@ function Sidebar({ onSelect, onNoteSelect, active }: SidebarProps) {
           customClass={isActive("sidebar-button")}
           rightIcon={notesExpanded ? "▲" : "▼"} // Pfeil abhängig vom Zustand
         />
-
-        {active === "notes" &&
-          notesExpanded &&
-          notes.map((note, index) => (
-            <div
-              key={index}
-              className="note-preview"
-              onClick={() => onNoteSelect(index)}
-              style={{
-                background: "rgba(255,255,255,0.2)",
-                margin: "5px",
-                padding: "8px",
-                borderRadius: "8px",
-                cursor: "pointer",
-              }}
-            >
-              📝 {note.substring(0, 20) || "Leere Notiz"}
-            </div>
-          ))}
 
         <Button
           label="Report"
