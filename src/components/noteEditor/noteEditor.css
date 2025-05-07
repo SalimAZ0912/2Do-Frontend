@@ -36,9 +36,8 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-width: 100vw; /* Setzt die max. Breite des Containers auf 100% des übergeordneten Elements */
-  width: 100%; /* Setzt die Breite des Containers auf 100% */
-  overflow: hidden; /* Verhindert das Wachsen des Containers über die festgelegte Breite hinaus */
+  max-width: 100vw;
+  overflow: hidden;
 }
 
 .note-text {
