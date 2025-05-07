@@ -1,35 +1,60 @@
-import { useRef } from "react";
+import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import { ContentEditable } from "@lexical/react/LexicalContentEditable";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
+import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
+
 import "./NoteEditor.css";
 
-export default function NoteEditor() {
-  const editorRef = useRef<HTMLDivElement>(null);
+import { useState } from "react";
+import { ToolbarPlugin } from "../ToolbarPlugin/ToolbarPlugin";
 
+export default function NoteEditor() {
+  const initialConfig = {
+    namespace: "MyEditor",
+    theme: {
+      paragraph: "editor-paragraph",
+    },
+    onError: (error: Error) => {
+      console.error(error);
+    },
+  };
+
+  // Zustand für den Editor-Text
+  const [editorState, setEditorState] = useState<string>("");
+
+  // Speichern der Notiz in localStorage
   const handleSave = () => {
-    const content = editorRef.current?.innerHTML || "";
-    localStorage.setItem("note", content);
+    localStorage.setItem("note", editorState);
     alert("Notiz gespeichert!");
+  };
+
+  // Diese Funktion wird verwendet, um den Editor-Zustand zu verfolgen
+  const handleEditorChange = (editorState: any) => {
+    editorState.read(() => {
+      setEditorState(JSON.stringify(editorState.toJSON()));
+    });
   };
 
   return (
     <div className="note-wrapper">
-      <div className="editor-toolbar">
-        <button onClick={() => document.execCommand("bold")}>B</button>
-        <button onClick={() => document.execCommand("italic")}>I</button>
-        <button onClick={() => document.execCommand("underline")}>U</button>
-        <button onClick={() => document.execCommand("strikeThrough")}>S</button>
-        <button onClick={() => document.execCommand("insertUnorderedList")}>
-          •
-        </button>
-      </div>
-
-      <div
-        className="note-editor"
-        contentEditable
-        ref={editorRef}
-        placeholder="Schreibe deine Notiz hier..."
-        suppressContentEditableWarning
-      />
-
+      <LexicalComposer initialConfig={initialConfig}>
+        <ToolbarPlugin />
+        <div className="note-editor" id="editor-scroll-container">
+          <RichTextPlugin
+            contentEditable={<ContentEditable className="editor-input" />}
+            placeholder={
+              <div className="editor-placeholder">Schreibe deine Notiz...</div>
+            }
+            ErrorBoundary={LexicalErrorBoundary}
+          />
+          <HistoryPlugin />
+          {/* Die OnChangePlugin-Funktion wird nur für den Text verwendet */}
+          <OnChangePlugin onChange={handleEditorChange} />
+        </div>
+      </LexicalComposer>
+      {/* Speichern-Button */}
       <button className="save-button" onClick={handleSave}>
         Speichern
       </button>
