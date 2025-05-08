@@ -8,7 +8,8 @@ interface ButtonProps {
   icon?: string;
   tag?: string;
   customClass?: string;
-  rightIcon?: string; // ▼ oder ▲
+  rightIcon?: string;
+  active?: boolean;
 }
 
 function Button({
@@ -17,15 +18,25 @@ function Button({
   onMouseDown,
   icon,
   tag,
-  customClass,
+  customClass = "",
   rightIcon,
+  active = false,
 }: ButtonProps) {
+  const classes = [
+    "toolbar-button", // Standard-Klasse
+    customClass,
+    active ? "active" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
     <div className="button-container">
       <button
-        className={customClass}
+        className={classes}
         onClick={onClick}
         onMouseDown={onMouseDown}
+        type="button"
       >
         {icon && <Icon logo={icon} alt={tag || "alt tag"} />}
         {label}

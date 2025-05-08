@@ -54,3 +54,12 @@ out/
 
 # Optional: if using TypeScript
 *.tsbuildinfo
+
+# Yarn v2+ (if not using PnP or berry)
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*

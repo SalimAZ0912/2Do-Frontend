@@ -1,63 +1,95 @@
-import { LexicalComposer } from "@lexical/react/LexicalComposer";
-import { ContentEditable } from "@lexical/react/LexicalContentEditable";
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
-import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
-import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
-
+import { useNoteEditor } from "./noteEditorLogic"; // Importiere die Logik
 import "./NoteEditor.css";
-
-import { useState } from "react";
-import { ToolbarPlugin } from "../ToolbarPlugin/ToolbarPlugin";
+import Button from "../button/button";
+import Select from "../select/select";
 
 export default function NoteEditor() {
-  const initialConfig = {
-    namespace: "MyEditor",
-    theme: {
-      paragraph: "editor-paragraph",
-    },
-    onError: (error: Error) => {
-      console.error(error);
-    },
-  };
+  const {
+    editorRef,
+    activeFormats,
+    selectedSize,
+    handleSave,
+    handleButtonClick,
+    handleKeyDown,
+    isActive,
+    handleSizeChange,
+  } = useNoteEditor(); // Nutze die Logik hier
 
-  // Zustand für den Editor-Text
-  const [editorState, setEditorState] = useState<string>("");
-
-  // Speichern der Notiz in localStorage
-  const handleSave = () => {
-    localStorage.setItem("note", editorState);
-    alert("Notiz gespeichert!");
-  };
-
-  // Diese Funktion wird verwendet, um den Editor-Zustand zu verfolgen
-  const handleEditorChange = (editorState: any) => {
-    editorState.read(() => {
-      setEditorState(JSON.stringify(editorState.toJSON()));
-    });
-  };
+  const sizeOptions = [
+    { label: "16px", value: "16px" },
+    { label: "18px", value: "18px" },
+    { label: "24px", value: "24px" },
+    { label: "30px", value: "30px" },
+    { label: "36px", value: "36px" },
+  ];
 
   return (
     <div className="note-wrapper">
-      <LexicalComposer initialConfig={initialConfig}>
-        <ToolbarPlugin />
-        <div className="note-editor" id="editor-scroll-container">
-          <RichTextPlugin
-            contentEditable={<ContentEditable className="editor-input" />}
-            placeholder={
-              <div className="editor-placeholder">Schreibe deine Notiz...</div>
-            }
-            ErrorBoundary={LexicalErrorBoundary}
-          />
-          <HistoryPlugin />
-          {/* Die OnChangePlugin-Funktion wird nur für den Text verwendet */}
-          <OnChangePlugin onChange={handleEditorChange} />
-        </div>
-      </LexicalComposer>
-      {/* Speichern-Button */}
-      <button className="save-button" onClick={handleSave}>
-        Speichern
-      </button>
+      <div className="editor-toolbar">
+        <Button
+          label="B"
+          onClick={() => handleButtonClick("bold")}
+          active={isActive("bold")} // Dynamisch je nach Status
+          customClass="custom-bold" // Custom-Klasse für fetten Text
+        />
+        <Button
+          label="I"
+          onClick={() => handleButtonClick("italic")}
+          active={isActive("italic")}
+          customClass="custom-italic" // Custom-Klasse für kursiv
+        />
+        <Button
+          label="U"
+          onClick={() => handleButtonClick("underline")}
+          active={isActive("underline")}
+          customClass="custom-underline" // Custom-Klasse für unterstrichen
+        />
+        <Button
+          label="S"
+          onClick={() => handleButtonClick("strikeThrough")}
+          active={isActive("strikeThrough")}
+          customClass="custom-strikeThrough" // Custom-Klasse für durchgestrichen
+        />
+        <Button
+          label="•"
+          onClick={() => handleButtonClick("insertUnorderedList")}
+          customClass="custom-list" // Eine Custom-Klasse für Aufzählungszeichen
+        />
+
+        {/* Dropdown für Schriftgrößen */}
+        <Select
+          options={sizeOptions}
+          value={selectedSize}
+          onChange={handleSizeChange} // Änderung der Schriftgröße
+        />
+
+        <Button
+          label="—"
+          onClick={() => handleButtonClick("insertHorizontalRule")}
+          customClass="custom-rule" // Eine Custom-Klasse für horizontale Linie
+        />
+        <Button
+          label="☐"
+          onClick={() =>
+            handleButtonClick("insertHTML", '<input type="checkbox" /> ')
+          }
+          customClass="custom-checkbox" // Eine Custom-Klasse für Checkbox
+        />
+      </div>
+
+      <div
+        className="note-editor"
+        contentEditable
+        ref={editorRef}
+        suppressContentEditableWarning
+        onKeyDown={handleKeyDown}
+      />
+
+      <Button
+        label="Speichern"
+        onClick={handleSave}
+        customClass="save-button"
+      />
     </div>
   );
 }

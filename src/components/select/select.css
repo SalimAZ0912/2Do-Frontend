@@ -1,0 +1,39 @@
+/* Container für Select-Komponenten */
+.select-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: inherit;
+}
+
+/* Label für Select-Elemente */
+.select-label {
+  font-size: 14px;
+  color: var(--text-secondary, #666);
+}
+
+/* Style für das Select-Element mit Glassmorphism */
+.select-element {
+  padding: 10px 15px; /* Größeres Padding für mehr Komfort */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Transparentes Border */
+  border-radius: 16px; /* Abgerundete Ecken für Select */
+  background: rgba(255, 255, 255, 0.2); /* Transparenter Hintergrund */
+  font-size: 14px;
+  color: black;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(11.9px); /* Blur-Effekt für den Hintergrund */
+  -webkit-backdrop-filter: blur(11.9px);
+}
+
+/* Hover-Effekt für Select */
+.select-element:hover {
+  border-color: #00b386; /* Hervorhebung bei Hover */
+  transform: scale(1.02); /* Leichte Vergrößerung */
+}
+
+/* Focus-Effekt für Select */
+.select-element:focus {
+  border-color: #00b386; /* Grüne Umrandung bei Fokus */
+  outline: none; /* Kein Standard-Fokusrahmen */
+}
