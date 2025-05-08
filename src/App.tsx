@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Content from "./components/content/content";
 import Sidebar from "./components/sidebar/sidebar";
+import Login from "./components/login/login.tsx";
 import "./App.css";
 
 function App() {
@@ -10,20 +12,32 @@ function App() {
   const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);
 
   return (
-    <div className="app-container">
-      <Sidebar
-        active={selected}
-        onSelect={(section) => {
-          setSelected(section);
-          if (section !== "notes") setSelectedNoteId(null);
-        }}
-        onNoteSelect={(id) => {
-          setSelected("notes");
-          setSelectedNoteId(id);
-        }}
-      />
-      <Content selected={selected} selectedNoteId={selectedNoteId} />
-    </div>
+    <Router>
+      <div className="app-container">
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="*"
+            element={
+              <>
+                <Sidebar
+                  active={selected}
+                  onSelect={(section) => {
+                    setSelected(section);
+                    if (section !== "notes") setSelectedNoteId(null);
+                  }}
+                  onNoteSelect={(id) => {
+                    setSelected("notes");
+                    setSelectedNoteId(id);
+                  }}
+                />
+                <Content selected={selected} selectedNoteId={selectedNoteId} />
+              </>
+            }
+          />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
