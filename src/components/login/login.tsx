@@ -39,8 +39,15 @@ const Login: React.FC<LoginProps> = () => {
                 </div>
                 <Button
                     label="Login"
+                    icon="login.svg"
                     onClick={() => console.log('Button clicked')}
                     customClass="login-button"
+                />
+                <Button
+                    label="Reset Password"
+                    icon="reset-password.svg"
+                    onClick={() => console.log('Button clicked')}
+                    customClass="resetPassword-button"
                 />
             </form>
         </div>
