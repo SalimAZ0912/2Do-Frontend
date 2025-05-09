@@ -2,7 +2,8 @@ import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Content from "./components/content/content";
 import Sidebar from "./components/sidebar/sidebar";
-import Login from "./components/login/login.tsx";
+import Login from "./components/login/login";
+import InputComponent from "./components/input-component/input-component";
 import "./App.css";
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
     "notes" | "report" | "profile" | "calendar"
   >("notes");
   const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);
+  const [inputValue, setInputValue] = useState<string>(""); 
 
   return (
     <Router>
@@ -32,6 +34,13 @@ function App() {
                   }}
                 />
                 <Content selected={selected} selectedNoteId={selectedNoteId} />
+                <div style={{ padding: "1rem" }}>
+                  <InputComponent
+                    value={inputValue}
+                    onChange={setInputValue}
+                    placeholder="Gib etwas ein..."
+                  />
+                </div>
               </>
             }
           />

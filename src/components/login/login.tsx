@@ -1,57 +1,105 @@
 import React, { useState } from 'react';
 import './login.css';
 import Button from '../button/button.tsx';
+import InputComponent from '../input-component/input-component.tsx';
 
 interface LoginProps {}
 
 const Login: React.FC<LoginProps> = () => {
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [emailError, setEmailError] = useState<string>('');
+  const [passwordError, setPasswordError] = useState<string>('');
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        // Hier kannst du die Login-Logik hinzufügen
-        console.log('Email:', email);
-        console.log('Password:', password);
-    };
+  const validateEmail = (email: string): boolean => {
+    return email.includes('@');
+  };
 
-    return (
-        <div className="login-container">
-            <form onSubmit={handleSubmit}>
-                <h2>Login into 2Do</h2>
-                <div className="input-group">
-                    <label>Email:</label>
-                    <input 
-                        type="email" 
-                        value={email} 
-                        onChange={(e) => setEmail(e.target.value)} 
-                        required 
-                    />
-                </div>
-                <div className="input-group">
-                    <label>Password:</label>
-                    <input 
-                        type="password" 
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)} 
-                        required 
-                    />
-                </div>
-                <Button
-                    label="Login"
-                    icon="login.svg"
-                    onClick={() => console.log('Button clicked')}
-                    customClass="login-button"
-                />
-                <Button
-                    label="Reset Password"
-                    icon="reset-password.svg"
-                    onClick={() => console.log('Button clicked')}
-                    customClass="resetPassword-button"
-                />
-            </form>
+  const validatePassword = (password: string): boolean => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    return regex.test(password);
+  };
+
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
+    if (!validateEmail(value)) {
+      setEmailError('Bitte eine gültige E-Mail-Adresse eingeben.');
+    } else {
+      setEmailError('');
+    }
+  };
+
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    if (!validatePassword(value)) {
+      setPasswordError(
+        'Passwort muss mindestens 8 Zeichen, Groß- und Kleinbuchstaben, eine Zahl und ein Sonderzeichen enthalten.'
+      );
+    } else {
+      setPasswordError('');
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const isEmailValid = validateEmail(email);
+    const isPasswordValid = validatePassword(password);
+
+    if (!isEmailValid) {
+      setEmailError('Bitte eine gültige E-Mail-Adresse eingeben.');
+    }
+
+    if (!isPasswordValid) {
+      setPasswordError(
+        'Passwort muss mindestens 8 Zeichen, Groß- und Kleinbuchstaben, eine Zahl und ein Sonderzeichen enthalten.'
+      );
+    }
+
+    if (isEmailValid && isPasswordValid) {
+      console.log('Email:', email);
+      console.log('Password:', password);
+    }
+  };
+
+  return (
+    <div className="login-container">
+      <form onSubmit={handleSubmit}>
+        <h2>Login into 2Do</h2>
+        <div className="input-group">
+          <label>Email:</label>
+          <InputComponent
+            value={email}
+            onChange={handleEmailChange}
+            placeholder="Email eingeben"
+            error={emailError}
+          />
         </div>
-    );
+        <div className="input-group">
+          <label>Password:</label>
+          <InputComponent
+            value={password}
+            onChange={handlePasswordChange}
+            placeholder="Passwort eingeben"
+            type="password"
+            error={passwordError}
+          />
+        </div>
+        <Button
+          label="Login"
+          icon="login.svg"
+          onClick={() => console.log('Button clicked')}
+          customClass="login-button"
+        />
+        <Button
+          label="Reset Password"
+          icon="reset-password.svg"
+          onClick={() => console.log('Button clicked')}
+          customClass="resetPassword-button"
+        />
+      </form>
+    </div>
+  );
 };
 
 export default Login;

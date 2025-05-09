@@ -1,0 +1,43 @@
+.input-wrapper {
+    position: relative;
+    width: 100%;
+  }
+  
+  .custom-input {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    font-size: 1rem;
+    margin: 5px 0px 5px 0px;
+  }
+  
+  .password-toggle-button {
+    position: absolute;
+    top: 50%;
+    right: 4px;
+    transform: translateY(-50%);
+    height: 32px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .password-toggle {
+    padding: 4px 8px;
+    background: transparent;
+    box-shadow: none;
+    border: none;
+  }
+  
+  .input-error {
+    border-color: red;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 0.85rem;
+    margin-top: 4px;
+  }
+  
+  
+  
