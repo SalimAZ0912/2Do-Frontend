@@ -12,7 +12,7 @@
 /* Toolbar Styling */
 .editor-toolbar {
   display: flex;
-  gap: 12px;
+
   justify-content: space-between;
   width: 100%;
 }
@@ -45,15 +45,21 @@
   border-radius: 8px;
 }
 
-/* Speichern Button */
+.toolbar-button {
+  padding: 20px 70px;
+}
+
 .save-button {
   align-self: flex-start;
-  padding: 10px 20px;
+  padding: 20px 30px;
   border-radius: 12px;
   background: linear-gradient(135deg, #00c569, #00b386);
+  justify-self: right;
   color: #fff;
   font-weight: bold;
   font-size: 14px;
+  display: flex;
+  width: auto;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -67,6 +73,7 @@
   content: "Schreibe deine Notiz hier...";
   color: #aaa;
 }
+
 button.active {
   background-color: #00b386; /* Ändert den Hintergrund bei aktivem Zustand */
   color: white;

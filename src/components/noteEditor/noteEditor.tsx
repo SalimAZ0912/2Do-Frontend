@@ -29,51 +29,48 @@ export default function NoteEditor() {
         <Button
           label="B"
           onClick={() => handleButtonClick("bold")}
-          active={isActive("bold")} // Dynamisch je nach Status
-          customClass="custom-bold" // Custom-Klasse für fetten Text
+          active={isActive("bold")}
+          customClass="toolbar-button"
         />
         <Button
           label="I"
           onClick={() => handleButtonClick("italic")}
           active={isActive("italic")}
-          customClass="custom-italic" // Custom-Klasse für kursiv
+          customClass="toolbar-button"
         />
         <Button
           label="U"
           onClick={() => handleButtonClick("underline")}
           active={isActive("underline")}
-          customClass="custom-underline" // Custom-Klasse für unterstrichen
+          customClass="toolbar-button"
         />
         <Button
           label="S"
           onClick={() => handleButtonClick("strikeThrough")}
           active={isActive("strikeThrough")}
-          customClass="custom-strikeThrough" // Custom-Klasse für durchgestrichen
+          customClass="toolbar-button"
         />
         <Button
           label="•"
           onClick={() => handleButtonClick("insertUnorderedList")}
-          customClass="custom-list" // Eine Custom-Klasse für Aufzählungszeichen
+          customClass="toolbar-button"
         />
-
-        {/* Dropdown für Schriftgrößen */}
         <Select
           options={sizeOptions}
           value={selectedSize}
-          onChange={handleSizeChange} // Änderung der Schriftgröße
+          onChange={handleSizeChange}
         />
-
         <Button
           label="—"
           onClick={() => handleButtonClick("insertHorizontalRule")}
-          customClass="custom-rule" // Eine Custom-Klasse für horizontale Linie
+          customClass="toolbar-button"
         />
         <Button
           label="☐"
           onClick={() =>
             handleButtonClick("insertHTML", '<input type="checkbox" /> ')
           }
-          customClass="custom-checkbox" // Eine Custom-Klasse für Checkbox
+          customClass="toolbar-button"
         />
       </div>
 
