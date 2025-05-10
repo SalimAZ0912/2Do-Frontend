@@ -1,0 +1,55 @@
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.custom-input {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 16px;
+  font-size: 1rem;
+  margin: 5px 0;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(11.9px);
+  -webkit-backdrop-filter: blur(11.9px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  color: black;
+}
+
+.custom-input:focus {
+  outline: none;
+  transform: scale(1.02);
+  transition: transform 0.2s ease;
+}
+
+.password-toggle-button {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+  height: 32px;
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle {
+  padding: 4px 8px;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+}
+
+.input-error {
+  border-color: red;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+.input-group {
+  margin-top: 20px;
+}

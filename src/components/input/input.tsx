@@ -1,5 +1,5 @@
-import React from 'react';
-import './input-component.css';
+import React from "react";
+import "./input.css";
 
 interface InputProps {
   value: string;
@@ -13,13 +13,13 @@ const InputComponent: React.FC<InputProps> = ({
   value,
   onChange,
   placeholder,
-  type = 'text',
-  error
+  type = "text",
+  error,
 }) => {
   return (
     <div className="input-wrapper">
       <input
-        className={`custom-input ${error ? 'input-error' : ''}`}
+        className={`custom-input ${error ? "input-error" : ""}`}
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}

@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
-import './login.css';
-import Button from '../button/button.tsx';
-import InputComponent from '../input-component/input-component.tsx';
+import React, { useState } from "react";
+import "./login.css";
+import Button from "../button/button.tsx";
+import InputComponent from "../input/input.tsx";
+import Link from "../link/link.tsx";
 
-interface LoginProps {}
+type LoginProps = object;
 
 const Login: React.FC<LoginProps> = () => {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [emailError, setEmailError] = useState<string>('');
-  const [passwordError, setPasswordError] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<string>("");
 
   const validateEmail = (email: string): boolean => {
-    return email.includes('@');
+    return email.includes("@");
   };
 
   const validatePassword = (password: string): boolean => {
@@ -23,9 +24,9 @@ const Login: React.FC<LoginProps> = () => {
   const handleEmailChange = (value: string) => {
     setEmail(value);
     if (!validateEmail(value)) {
-      setEmailError('Bitte eine gültige E-Mail-Adresse eingeben.');
+      setEmailError("Bitte eine gültige E-Mail-Adresse eingeben.");
     } else {
-      setEmailError('');
+      setEmailError("");
     }
   };
 
@@ -33,10 +34,10 @@ const Login: React.FC<LoginProps> = () => {
     setPassword(value);
     if (!validatePassword(value)) {
       setPasswordError(
-        'Passwort muss mindestens 8 Zeichen, Groß- und Kleinbuchstaben, eine Zahl und ein Sonderzeichen enthalten.'
+        "Passwort muss mindestens 8 Zeichen, Groß- und Kleinbuchstaben, eine Zahl und ein Sonderzeichen enthalten."
       );
     } else {
-      setPasswordError('');
+      setPasswordError("");
     }
   };
 
@@ -47,18 +48,18 @@ const Login: React.FC<LoginProps> = () => {
     const isPasswordValid = validatePassword(password);
 
     if (!isEmailValid) {
-      setEmailError('Bitte eine gültige E-Mail-Adresse eingeben.');
+      setEmailError("Bitte eine gültige E-Mail-Adresse eingeben.");
     }
 
     if (!isPasswordValid) {
       setPasswordError(
-        'Passwort muss mindestens 8 Zeichen, Groß- und Kleinbuchstaben, eine Zahl und ein Sonderzeichen enthalten.'
+        "Passwort muss mindestens 8 Zeichen, Groß- und Kleinbuchstaben, eine Zahl und ein Sonderzeichen enthalten."
       );
     }
 
     if (isEmailValid && isPasswordValid) {
-      console.log('Email:', email);
-      console.log('Password:', password);
+      console.log("Email:", email);
+      console.log("Password:", password);
     }
   };
 
@@ -67,36 +68,36 @@ const Login: React.FC<LoginProps> = () => {
       <form onSubmit={handleSubmit}>
         <h2>Login into 2Do</h2>
         <div className="input-group">
-          <label>Email:</label>
           <InputComponent
             value={email}
             onChange={handleEmailChange}
-            placeholder="Email eingeben"
+            placeholder="Email"
             error={emailError}
           />
         </div>
         <div className="input-group">
-          <label>Password:</label>
           <InputComponent
             value={password}
             onChange={handlePasswordChange}
-            placeholder="Passwort eingeben"
+            placeholder="Passwort"
             type="password"
             error={passwordError}
           />
         </div>
-        <Button
-          label="Login"
-          icon="login.svg"
-          onClick={() => console.log('Button clicked')}
-          customClass="login-button"
-        />
-        <Button
-          label="Reset Password"
-          icon="reset-password.svg"
-          onClick={() => console.log('Button clicked')}
-          customClass="resetPassword-button"
-        />
+        <div className="input-group">
+          <Button
+            label="Login"
+            icon="login.svg"
+            onClick={() => console.log("Button clicked")}
+            customClass="login-button"
+          />
+
+          <Link
+            label="Passwort vergessen?"
+            href="/reset-password"
+            customClass="reset-password-link"
+          />
+        </div>
       </form>
     </div>
   );

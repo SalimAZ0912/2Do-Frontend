@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Content from "./components/content/content";
 import Sidebar from "./components/sidebar/sidebar";
 import Login from "./components/login/login";
-import InputComponent from "./components/input-component/input-component";
+import InputComponent from "./components/input/input";
 import "./App.css";
 
 function App() {
@@ -11,7 +11,7 @@ function App() {
     "notes" | "report" | "profile" | "calendar"
   >("notes");
   const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);
-  const [inputValue, setInputValue] = useState<string>(""); 
+  const [inputValue, setInputValue] = useState<string>("");
 
   return (
     <Router>
