@@ -1,0 +1,34 @@
+/* components/GlassCheckbox.css */
+.glass-checkbox {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
+
+.glass-checkbox input {
+  display: none;
+}
+
+.checkbox-custom {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.2),
+    inset 0 0 2px rgba(255, 255, 255, 0.4);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.glass-checkbox input:checked + .checkbox-custom::after {
+  content: "✔";
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  font-size: 14px;
+  color: #fff;
+}
